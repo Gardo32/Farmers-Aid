@@ -1,6 +1,6 @@
 import os
 
-deps = ['streamlit', 'pandas','requests']
+deps = ['streamlit', 'pandas','requests','python-dotenv']
 
 os.system("pip install uv")
 
