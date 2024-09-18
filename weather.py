@@ -144,38 +144,29 @@ def get_combined_weather_data(location, latitude, longitude):
             'Condition': current['condition']['text']
         }])
     else:
-        real_time_df = pd.DataFrame()
+        real_time_df = pd.DataFrame(columns=['Date', 'Location', 'Country', 'Local Time', 'Avg Temperature (°C)',
+                                             'Avg Humidity (%)', 'Total Precipitation (mm)', 'Condition'])
 
-    historical_df = pd.DataFrame(historical_weather_data)
-    forecast_df = pd.DataFrame(forecast_weather_data)
+    historical_df = pd.DataFrame(historical_weather_data, columns=['Date', 'Location', 'Country', 'Local Time',
+                                                                   'Avg Temperature (°C)', 'Avg Humidity (%)',
+                                                                   'Total Precipitation (mm)', 'Condition'])
+    forecast_df = pd.DataFrame(forecast_weather_data, columns=['Date', 'Location', 'Country', 'Local Time',
+                                                               'Avg Temperature (°C)', 'Avg Humidity (%)',
+                                                               'Total Precipitation (mm)', 'Condition'])
 
     # Fetch NASA precipitation data
     nasa_precipitation_df = get_precipitation_data(latitude, longitude)
 
-    # Ensure 'Date' column is in the same format
-    if nasa_precipitation_df is not None:
-        nasa_precipitation_df['Date'] = pd.to_datetime(nasa_precipitation_df['Date']).dt.strftime('%Y-%m-%d')
-
-    # Define the columns to keep
-    columns_to_keep = ['Date', 'Location', 'Country', 'Local Time', 'Avg Temperature (°C)',
-                       'Avg Humidity (%)', 'Total Precipitation (mm)', 'Condition']
-
-    # Ensure all DataFrames have the same columns
-    real_time_df = real_time_df.reindex(columns=columns_to_keep)
-    historical_df = historical_df.reindex(columns=columns_to_keep)
-    forecast_df = forecast_df.reindex(columns=columns_to_keep)
-
-    # Concatenate the DataFrames
-    combined_df = pd.concat([real_time_df, historical_df, forecast_df], ignore_index=True)
-
     # Merge with NASA precipitation data
     if nasa_precipitation_df is not None:
-        combined_df = pd.merge(combined_df, nasa_precipitation_df[['Date', 'Precipitation (mm)']],
-                               on='Date', how='left')
+        combined_df = pd.concat([real_time_df, historical_df, forecast_df], ignore_index=True)
+        combined_df = pd.merge(combined_df, nasa_precipitation_df[['Date', 'Precipitation (mm)']], on='Date', how='left')
         combined_df['Total Precipitation (mm)'] = combined_df['Precipitation (mm)'].combine_first(combined_df['Total Precipitation (mm)'])
         combined_df.drop(columns=['Precipitation (mm)'], inplace=True)
+    else:
+        combined_df = pd.concat([real_time_df, historical_df, forecast_df], ignore_index=True)
 
     # Clip precipitation values
     combined_df['Total Precipitation (mm)'] = combined_df['Total Precipitation (mm)'].clip(lower=0.01, upper=0.99)
 
-    return combined_df
+    return real_time_df, combined_df
