@@ -106,8 +106,8 @@ with chrt:
         st.plotly_chart(fig2)
 
     with chrt:
-        col3, col4 = st.columns([2, 4])
-        with col3:
+        col3, col4 = st.columns([4, 2])
+        with col4:
             # Display metrics for Avg Temperature, Avg Humidity, and Total Precipitation
             avg_temp = real_df['Avg Temperature (°C)'].mean()
             avg_humidity = real_df['Avg Humidity (%)'].mean()
@@ -117,7 +117,7 @@ with chrt:
             st.metric(label="Current Humidity (%)", value=f"{avg_humidity:.2f} %")
             st.metric(label="Current Precipitation (mm)", value=f"{total_precipitation:.2f} mm")
 
-        with col4:
+        with col3:
             # Create a correlation matrix
             combined_df = pollen_df[['Count.weed_pollen']].join(
                 weather_df[['Avg Temperature (°C)', 'Avg Humidity (%)']]
