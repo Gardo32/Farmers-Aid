@@ -8,10 +8,12 @@ import plotly.graph_objects as go
 from dotenv import load_dotenv
 from pollen import get_combined_pollen_data
 from weather import get_combined_weather_data
+from AI import get_agricultural_response
 
 # Load the IP API key from the .env file
 load_dotenv()
 IPkey = os.getenv('ip')
+Ai_key = os.getenv("github")
 
 
 # Function to convert country code to full country name
@@ -56,8 +58,10 @@ place = f"{city},{country}"
 
 pollen_df = get_combined_pollen_data(place)
 real_df, weather_df = get_combined_weather_data(city, latitude, longitude)
-
+pollen_df.to_csv("pollen.csv")
+weather_df.to_csv("weather.csv")
 # App start from here
+
 st.title('Farmers Aid')
 
 At = st.expander("Advance Tweaks", expanded=False)
@@ -171,7 +175,38 @@ with chrt:
             st.plotly_chart(fig4)
 
 with rprt:
-    st.write("Here will be the report")
+    full_report = get_agricultural_response(Ai_key, weather_df, pollen_df, temperature=0.3, max_tokens=4096, top_p=0.9)
+    report_sections = full_report.split('---')
+    for chapter in report_sections:
+        st.markdown(chapter)
 
 with dyrt:
-    st.write("Here will be the dynamic report")
+    for i, chapter in enumerate(report_sections):
+        # Display each chapter of the report
+        st.markdown(chapter)
+
+        # Insert charts between chapters at specific points (e.g., after the first chapter)
+        if i == 0:
+            # Insert temperature and humidity chart
+            st.plotly_chart(fig2)
+        elif i == 1:
+            # Insert correlation heatmap
+            st.plotly_chart(fig4)
+
+        # Insert horizontally stacked current data metrics in a box
+        if i == 2:
+            avg_temp = real_df['Avg Temperature (°C)'].mean()
+            avg_humidity = real_df['Avg Humidity (%)'].mean()
+            total_precipitation = real_df['Total Precipitation (mm)'].sum()
+
+
+            with st.container(border=True):
+                col1, col2, col3 = st.columns(3)
+
+                with col1:
+                    st.metric(label="Current Temperature (°C)", value=f"{avg_temp:.2f} °C")
+                with col2:
+                    st.metric(label="Current Humidity (%)", value=f"{avg_humidity:.2f} %")
+                with col3:
+                    st.metric(label="Current Precipitation (mm)", value=f"{total_precipitation:.2f} mm")
+
