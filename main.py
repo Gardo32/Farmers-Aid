@@ -1,19 +1,17 @@
-import os
 import streamlit as st
 import pandas as pd
 import requests
 import pycountry
 import plotly.express as px
 import plotly.graph_objects as go
-from dotenv import load_dotenv
 from pollen import get_combined_pollen_data
 from weather import get_combined_weather_data
 from AI import get_agricultural_response
 
 # Load the IP API key from the .env file
-load_dotenv()
-IPkey = os.getenv('ip')
-Ai_key = os.getenv("github")
+
+IPkey = st.secrets["ip"]
+Ai_key = st.secrets["github"]
 
 
 # Function to convert country code to full country name

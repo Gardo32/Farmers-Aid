@@ -1,13 +1,12 @@
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
-import os
+import streamlit as st
 
 # Load environment variables
-load_dotenv()
-WEATHER_API_KEY = os.getenv('weather')  # WeatherAPI key
-NASA_API_KEY = 'DEMO_key'  # NASA API key (change if needed)
+
+WEATHER_API_KEY = st.secrets["weather"]  # WeatherAPI key
+NASA_API_KEY = st.secrets["nasa"]  # NASA API key (change if needed)
 
 # Weather API URLs
 REALTIME_URL = 'http://api.weatherapi.com/v1/current.json'

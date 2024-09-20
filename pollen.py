@@ -1,12 +1,9 @@
 # pollen_data.py
 import requests
 import pandas as pd
-from dotenv import load_dotenv
-import os
+import streamlit as st
 
-# Load API key from .env file
-load_dotenv()
-API_KEY = os.getenv('AMBEE_API_KEY')
+API_KEY = st.secrets["AMBEE_API_KEY"]
 
 # Headers including the API key
 headers = {
