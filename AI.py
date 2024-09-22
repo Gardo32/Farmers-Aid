@@ -29,7 +29,7 @@ def get_agricultural_response(auth_token, df1, df2, temperature=0.3, max_tokens=
     # Get the response
     response = client.complete(
         messages=messages,
-        model="gpt-4o-mini",
+        model="Cohere-command-r",
         temperature=temperature,
         max_tokens=max_tokens,
         top_p=top_p
@@ -65,7 +65,7 @@ def get_agricultural_chat(auth_token, user_input, location,df1,df2, temperature=
     # Get the response
     response = client.complete(
         messages=messages,
-        model="gpt-4o",
+        model="gpt-4o-mini",
         temperature=temperature,
         max_tokens=max_tokens,
         top_p=top_p

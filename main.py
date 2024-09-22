@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from pollen import get_combined_pollen_data
 from weather import get_combined_weather_data
 from AI import get_agricultural_response, get_agricultural_chat
-import random
+import datetime as dt
 
 # Load the IP API key from the .env file
 IPkey = st.secrets["ip"]
@@ -140,10 +140,13 @@ with dashb:
     with rprt:
         full_report = get_agricultural_response(Ai_key, weather_df, pollen_df, temperature=0.3, max_tokens=4096, top_p=0.9)
         report_sections = full_report.split('---')
+        date = dt.date.today().strftime("%d %m, %Y")
+        st.title(f"Comprehensive Agriculture Report: {place} ({date})")
         for chapter in report_sections:
             st.markdown(chapter)
 
     with dyrt:
+        st.title(f"Dynamic Agriculture Report: {place} ({date})")
         for i, chapter in enumerate(report_sections):
             st.markdown(chapter)
 
@@ -151,7 +154,7 @@ with dashb:
             if i == 0:
                 st.plotly_chart(fig2)
             elif i == 1:
-                st.plotly_chart(fig4)
+                st.plotly_chart(fig1)
 
             # Insert horizontally stacked current data metrics in a box
             if i == 2:
