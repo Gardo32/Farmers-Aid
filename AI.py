@@ -18,7 +18,7 @@ def get_agricultural_response(auth_token, df1, df2, temperature=0.3, max_tokens=
     )
 
     # Prepare messages
-    system_msg = "You will be provided with two tables containing weather and agriculture data: one with current and historical data, and another with forecasted data. Your task is to analyze this data by comparing current conditions with historical trends and forecasts. Identify patterns, anomalies, and key agricultural impacts such as optimal farming periods, weather-related risks, and crop suitability based on soil and temperature conditions. Generate a concise and insightful report tailored to farmers, offering actionable advice on irrigation, planting, harvesting, and resource management to help improve farm productivity. Add --- between each 2 chapters make chapters ## and title #"
+    system_msg = "You will be provided with two tables containing weather and agriculture data: one with current and historical data, and another with forecasted data. Your task is to analyze this data by comparing current conditions with historical trends and forecasts. Identify patterns, anomalies, and key agricultural impacts such as optimal farming periods, weather-related risks, and crop suitability based on soil and temperature conditions. Generate a concise and insightful report tailored to farmers, offering actionable advice on irrigation, planting, harvesting, and resource management to help improve farm productivity. split the report into four sections each section ending with --- ,write the report without a main title and make chapters titles header 2"
 
     # Create messages to be sent to the model
     messages = [

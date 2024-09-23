@@ -187,7 +187,55 @@ with dashb:
 
 # About Us tab
 with about:
-    st.title("About Us Page")
+    # Title of the page
+    st.title("About Us")
+
+    # Project Overview
+    st.header("Project Overview")
+    st.write(
+        """
+        Welcome to **Farmers Aid**! Our project is dedicated to helping farmers make data-driven decisions through real-time data analytics collected from NASA and public APIs. We strive to empower farmers with the insights they need to optimize their practices and improve yields.
+        """
+    )
+
+    # Team Members Section
+    st.header("Meet Our Team")
+    team_members = {
+        "Mohammed Aldaqaq": "Team Leader & Backend Developer",
+        "Ali Alsheikh": "AI Engineer",
+        "Mohammed Azan": "UI/UX Designer",
+        "Abdulla Hilal": "Assistant Developer"
+    }
+
+    # Display team members in a collapsible section
+    with st.expander("Click to view team members"):
+        for name, role in team_members.items():
+            st.write(f"**{name}**: {role}")
+
+    # Educational Background
+    st.header("Our Background")
+    st.write(
+        """
+        We are students at the **Nasser Vocational Training Centre (NVTC)**, where we are learning and developing our skills in technology and data science.
+        """
+    )
+
+    # App Features Section
+    st.header("App Features")
+    st.write(
+        """
+        Our application performs data analytics to produce visual charts and sends the collected data to a large language model (LLM) for report generation. We combine these insights to create dynamic reports tailored to user needs. Additionally, we have developed a custom statistics AI assistant that provides personalized statistics based on user prompts and the provided data.
+        """
+    )
+
+    # Interactive Feature: Feedback Section
+    st.header("We Value Your Feedback!")
+    feedback = st.text_area("What do you think about Farmers Aid?", placeholder="Share your thoughts...")
+    if st.button("Submit Feedback"):
+        if feedback:
+            st.success("Thank you for your feedback!")
+        else:
+            st.warning("Please enter your feedback before submitting.")
 
 # FAQ tab
 with faq:
