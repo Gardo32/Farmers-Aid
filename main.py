@@ -4,6 +4,8 @@ import requests
 import pycountry
 import plotly.express as px
 import plotly.graph_objects as go
+from pandas import read_csv
+
 from pollen import get_combined_pollen_data
 from weather import get_combined_weather_data
 from AI import get_agricultural_response, get_agricultural_chat
@@ -65,7 +67,7 @@ with dashb:
 
     with At:
         st.write("Use the options below to tweak chart settings:")
-        chart_color = st.color_picker("Select Chart Line Color", "#1f77b4")
+        chart_color = st.color_picker("Select Chart Line Color", "#dad6c9")  # Changed default to #1f77b4 for better visibility
         line_style = st.selectbox("Select Line Style", ['solid', 'dot', 'dash'])
         y_axis_range_temp = st.slider("Select Y-axis range for Temperature (°C)", 0, 50, (10, 40))
         y_axis_range_humidity = st.slider("Select Y-axis range for Humidity (%)", 0, 100, (20, 80))
@@ -79,7 +81,9 @@ with dashb:
             pollen_df['time'] = pd.to_datetime(pollen_df['time'], unit='s')
             fig1 = px.line(pollen_df, x='time', y='Count.weed_pollen',
                            labels={'Count.weed_pollen': 'Weed Pollen Count', 'time': 'Time'},
-                           title="Weed Pollen Counts Over Time")
+                           title="Weed Pollen Counts Over Time",
+                           line_shape="linear")
+            fig1.update_traces(line=dict(color=chart_color))
             st.plotly_chart(fig1)
 
         # Second chart: Temperature and humidity trends with customization
@@ -88,21 +92,21 @@ with dashb:
             fig2.add_trace(go.Scatter(
                 x=weather_df['Date'], y=weather_df['Avg Temperature (°C)'],
                 mode='lines', name='Avg Temperature (°C)',
-                line=dict(dash=line_style, color=chart_color),
+                line=dict(dash=line_style, color='#A3AB30'),
                 yaxis='y1'))
             fig2.add_trace(go.Scatter(
                 x=weather_df['Date'], y=weather_df['Avg Humidity (%)'],
                 mode='lines', name='Avg Humidity (%)',
-                line=dict(dash=line_style),
+                line=dict(dash=line_style, color=chart_color),
                 yaxis='y2'))
 
             fig2.update_layout(
                 title="Temperature and Humidity Trends Over Time",
                 xaxis_title="Date",
                 yaxis=dict(title="Avg Temperature (°C)", range=y_axis_range_temp,
-                           titlefont=dict(color="#1f77b4"), tickfont=dict(color="#1f77b4")),
+                           titlefont=dict(color=chart_color), tickfont=dict(color=chart_color)),
                 yaxis2=dict(title="Avg Humidity (%)", range=y_axis_range_humidity,
-                            titlefont=dict(color="#ff7f0e"), tickfont=dict(color="#ff7f0e"),
+                            titlefont=dict(color=chart_color), tickfont=dict(color=chart_color),
                             overlaying='y', side='right'),
                 showlegend=True,
                 xaxis_showgrid=show_grid,
@@ -239,4 +243,4 @@ with about:
 
 # FAQ tab
 with faq:
-    st.title("FAQ Page")  # Changed to "FAQ Page" for clarity
+    st.title("Frequently Asked Questions")
