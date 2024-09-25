@@ -43,8 +43,8 @@ def get_ip_info():
 location_data = get_ip_info()
 
 # Variables for each location data
-city = location_data.get('city', 'Unknown')
-country = location_data.get('country', 'Unknown')
+city = "Isatown"
+country = "Bahrain"
 latitude = 26.169422
 longitude = 50.552246
 
