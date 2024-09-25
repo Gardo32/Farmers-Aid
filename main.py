@@ -127,6 +127,7 @@ with dashb:
             st.metric(label="Current Precipitation (mm)", value=f"{total_precipitation:.2f} mm")
 
         # Correlation heatmap
+        # Correlation heatmap
         with col3:
             combined_df = pollen_df[['Count.weed_pollen']].join(
                 weather_df[['Avg Temperature (°C)', 'Avg Humidity (%)']]
@@ -138,7 +139,12 @@ with dashb:
                 y=corr_matrix.columns,
                 colorscale='Viridis'
             ))
-            fig4.update_layout(title='Correlation Heatmap', xaxis_title='Variables', yaxis_title='Variables')
+            fig4.update_layout(
+                title='Correlation Heatmap',
+                xaxis_title='Variables',
+                yaxis_title='',
+                yaxis=dict(showticklabels=False)  # This removes the vertical axis labels
+            )
             st.plotly_chart(fig4)
 
     with rprt:
@@ -244,3 +250,29 @@ with about:
 # FAQ tab
 with faq:
     st.title("Frequently Asked Questions")
+    # Define FAQs as a dictionary
+    faqs = {
+        "What is Farmers Aid?":
+            "Farmers Aid is a project dedicated to helping farmers make data-driven decisions through real-time data analytics collected from NASA and public APIs. It aims to empower farmers with insights to optimize their practices and improve yields.",
+
+        "Who is behind Farmers Aid?":
+            "The Farmers Aid team consists of students from the Nasser Vocational Training Centre (NVTC):\n"
+            "1. Mohammed Aldaqaq - Team Leader & Backend Developer\n"
+            "2. Ali Alsheikh - AI Engineer\n"
+            "3. Mohammed Azan - UI/UX Designer\n"
+            "4. Abdulla Hilal - Assistant Developer",
+
+        "What is the main goal of Farmers Aid?":
+            "The main goal of Farmers Aid is to empower farmers with data-driven insights to optimize their farming practices and improve yields through real-time analytics and dynamic reports.",
+
+        "What does the application do?":
+            "The Farmers Aid application performs data analytics to create visual charts, sends the collected data to a large language model (LLM) for report generation, and produces personalized dynamic reports based on user needs. It also includes a custom AI assistant for generating personalized statistics.",
+
+        "Where are the team members from?":
+            "The team members are students from the Nasser Vocational Training Centre (NVTC), where they are developing their skills in technology and data science."
+    }
+
+    # Create an expandable section for each FAQ
+    for question, answer in faqs.items():
+        with st.expander(question):
+            st.write(answer)
