@@ -1,0 +1,7 @@
+uv
+streamlit
+azure-ai-inference
+requests
+pandas
+pycountry
+plotly
