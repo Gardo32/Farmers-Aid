@@ -4,8 +4,6 @@ import requests
 import pycountry
 import plotly.express as px
 import plotly.graph_objects as go
-from pandas import read_csv
-
 from pollen import get_combined_pollen_data
 from weather import get_combined_weather_data
 from AI import get_agricultural_response, get_agricultural_chat
@@ -51,7 +49,7 @@ latitude = location_data.get('latitude', 'Unknown')
 longitude = location_data.get('longitude', 'Unknown')
 
 # Create a variable with the format City,Country
-place = f"{city},{country}"
+place = f"Isatown,Bahrain"
 
 # Fetch data
 pollen_df = get_combined_pollen_data(place)
@@ -87,32 +85,38 @@ with dashb:
             st.plotly_chart(fig1)
 
         # Second chart: Temperature and humidity trends with customization
+        # Second chart: Temperature and humidity trends with customization
         with col2:
             fig2 = go.Figure()
             fig2.add_trace(go.Scatter(
                 x=weather_df['Date'], y=weather_df['Avg Temperature (°C)'],
-                mode='lines', name='Avg Temperature (°C)',
+                mode='lines',
                 line=dict(dash=line_style, color='#A3AB30'),
-                yaxis='y1'))
+                hovertemplate='Temperature: %{y:.2f} °C<br>Date: %{x}<extra></extra>',  # Custom hover info for temperature
+                yaxis='y1'
+            ))
             fig2.add_trace(go.Scatter(
                 x=weather_df['Date'], y=weather_df['Avg Humidity (%)'],
-                mode='lines', name='Avg Humidity (%)',
+                mode='lines',
                 line=dict(dash=line_style, color=chart_color),
-                yaxis='y2'))
+                hovertemplate='Humidity: %{y:.2f} %<br>Date: %{x}<extra></extra>',  # Custom hover info for humidity
+                yaxis='y2'
+            ))
 
             fig2.update_layout(
-                title="Temperature and Humidity Trends Over Time",
-                xaxis_title="Date",
-                yaxis=dict(title="Avg Temperature (°C)", range=y_axis_range_temp,
+                title="",  # Remove the title
+                xaxis_title="",  # Remove x-axis title
+                yaxis=dict(title="", range=y_axis_range_temp,
                            titlefont=dict(color=chart_color), tickfont=dict(color=chart_color)),
-                yaxis2=dict(title="Avg Humidity (%)", range=y_axis_range_humidity,
+                yaxis2=dict(title="", range=y_axis_range_humidity,
                             titlefont=dict(color=chart_color), tickfont=dict(color=chart_color),
                             overlaying='y', side='right'),
-                showlegend=True,
+                showlegend=False,  # Hide the legend
                 xaxis_showgrid=show_grid,
                 yaxis_showgrid=show_grid
             )
             st.plotly_chart(fig2)
+
 
         # Display metrics for Avg Temperature, Avg Humidity, and Total Precipitation
         col3, col4 = st.columns([4, 2])
@@ -126,7 +130,6 @@ with dashb:
             st.metric(label="Current Humidity (%)", value=f"{avg_humidity:.2f} %")
             st.metric(label="Current Precipitation (mm)", value=f"{total_precipitation:.2f} mm")
 
-        # Correlation heatmap
         # Correlation heatmap
         with col3:
             combined_df = pollen_df[['Count.weed_pollen']].join(
@@ -211,10 +214,10 @@ with about:
     # Team Members Section
     st.header("Meet Our Team")
     team_members = {
-        "Mohammed Aldaqaq": "Team Leader & Backend Developer",
+        "Mohammed Aldaqaq": "Team Leader & Data Analyst",
         "Ali Alsheikh": "AI Engineer",
         "Mohammed Azan": "UI/UX Designer",
-        "Abdulla Hilal": "Assistant Developer"
+        "Abdulla Hilal": "Web Developer"
     }
 
     # Display team members in a collapsible section
@@ -257,10 +260,10 @@ with faq:
 
         "Who is behind Farmers Aid?":
             "The Farmers Aid team consists of students from the Nasser Vocational Training Centre (NVTC):\n"
-            "1. Mohammed Aldaqaq - Team Leader & Backend Developer\n"
+            "1. Mohammed Aldaqaq - Team Leader & Data Analyst\n"
             "2. Ali Alsheikh - AI Engineer\n"
             "3. Mohammed Azan - UI/UX Designer\n"
-            "4. Abdulla Hilal - Assistant Developer",
+            "4. Abdulla Hilal - Web Developer",
 
         "What is the main goal of Farmers Aid?":
             "The main goal of Farmers Aid is to empower farmers with data-driven insights to optimize their farming practices and improve yields through real-time analytics and dynamic reports.",
