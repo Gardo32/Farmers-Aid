@@ -104,7 +104,7 @@ with dashb:
             ))
 
             fig2.update_layout(
-                title="",  # Remove the title
+                title="Temperature and Humidity Trends Over Time",  # Remove the title
                 xaxis_title="",  # Remove x-axis title
                 yaxis=dict(title="", range=y_axis_range_temp,
                            titlefont=dict(color=chart_color), tickfont=dict(color=chart_color)),
