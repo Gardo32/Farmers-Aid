@@ -43,13 +43,13 @@ def get_ip_info():
 location_data = get_ip_info()
 
 # Variables for each location data
-city = location_data.get('city', 'Unknown')
-country = location_data.get('country', 'Unknown')
-latitude = location_data.get('latitude', 'Unknown')
-longitude = location_data.get('longitude', 'Unknown')
+city = "Isatown"
+country = "Bahrain"
+latitude = 26.169422
+longitude = 50.552246
 
 # Create a variable with the format City,Country
-place = f"Isatown,Bahrain"
+place = f"{city},{country}"
 
 # Fetch data
 pollen_df = get_combined_pollen_data(place)
