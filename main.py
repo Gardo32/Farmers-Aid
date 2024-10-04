@@ -45,8 +45,8 @@ location_data = get_ip_info()
 # Variables for each location data
 city = location_data.get('city', 'Unknown')
 country = location_data.get('country', 'Unknown')
-latitude = 26.169422
-longitude = 50.552246
+latitude = location_data.get('latitude', 'Unknown')
+longitude = location_data.get('longitude', 'Unknown')
 
 # Create a variable with the format City,Country
 place = f"Isatown,Bahrain"
