@@ -43,13 +43,13 @@ def get_ip_info():
 location_data = get_ip_info()
 
 # Variables for each location data
-city = "Isatown"
+city = "Manama"
 country = "Bahrain"
 latitude = 26.169422
 longitude = 50.552246
 
 # Create a variable with the format City,Country
-place = f"{city},{country}"
+place = f"Isatown,{country}"
 
 # Fetch data
 pollen_df = get_combined_pollen_data(place)
@@ -65,7 +65,7 @@ with dashb:
 
     with At:
         st.write("Use the options below to tweak chart settings:")
-        chart_color = st.color_picker("Select Chart Line Color", "#dad6c9")  # Changed default to #1f77b4 for better visibility
+        chart_color = st.color_picker("Select Chart Line Color", "#dad6c9")
         line_style = st.selectbox("Select Line Style", ['solid', 'dot', 'dash'])
         y_axis_range_temp = st.slider("Select Y-axis range for Temperature (°C)", 0, 50, (10, 40))
         y_axis_range_humidity = st.slider("Select Y-axis range for Humidity (%)", 0, 100, (20, 80))
@@ -82,9 +82,8 @@ with dashb:
                            title="Weed Pollen Counts Over Time",
                            line_shape="linear")
             fig1.update_traces(line=dict(color=chart_color))
-            st.plotly_chart(fig1)
+            st.plotly_chart(fig1, use_container_width=True, key="weed_pollen_chart")
 
-        # Second chart: Temperature and humidity trends with customization
         # Second chart: Temperature and humidity trends with customization
         with col2:
             fig2 = go.Figure()
@@ -92,31 +91,30 @@ with dashb:
                 x=weather_df['Date'], y=weather_df['Avg Temperature (°C)'],
                 mode='lines',
                 line=dict(dash=line_style, color='#A3AB30'),
-                hovertemplate='Temperature: %{y:.2f} °C<br>Date: %{x}<extra></extra>',  # Custom hover info for temperature
+                hovertemplate='Temperature: %{y:.2f} °C<br>Date: %{x}<extra></extra>',
                 yaxis='y1'
             ))
             fig2.add_trace(go.Scatter(
                 x=weather_df['Date'], y=weather_df['Avg Humidity (%)'],
                 mode='lines',
                 line=dict(dash=line_style, color=chart_color),
-                hovertemplate='Humidity: %{y:.2f} %<br>Date: %{x}<extra></extra>',  # Custom hover info for humidity
+                hovertemplate='Humidity: %{y:.2f} %<br>Date: %{x}<extra></extra>',
                 yaxis='y2'
             ))
 
             fig2.update_layout(
-                title="",  # Remove the title
-                xaxis_title="",  # Remove x-axis title
+                title="",
+                xaxis_title="",
                 yaxis=dict(title="", range=y_axis_range_temp,
                            titlefont=dict(color=chart_color), tickfont=dict(color=chart_color)),
                 yaxis2=dict(title="", range=y_axis_range_humidity,
                             titlefont=dict(color=chart_color), tickfont=dict(color=chart_color),
                             overlaying='y', side='right'),
-                showlegend=False,  # Hide the legend
+                showlegend=False,
                 xaxis_showgrid=show_grid,
                 yaxis_showgrid=show_grid
             )
-            st.plotly_chart(fig2)
-
+            st.plotly_chart(fig2, use_container_width=True, key="temp_humidity_chart")
 
         # Display metrics for Avg Temperature, Avg Humidity, and Total Precipitation
         col3, col4 = st.columns([4, 2])
@@ -146,9 +144,9 @@ with dashb:
                 title='Correlation Heatmap',
                 xaxis_title='Variables',
                 yaxis_title='',
-                yaxis=dict(showticklabels=False)  # This removes the vertical axis labels
+                yaxis=dict(showticklabels=False)
             )
-            st.plotly_chart(fig4)
+            st.plotly_chart(fig4, use_container_width=True, key="correlation_heatmap")
 
     with rprt:
         full_report = get_agricultural_response(Ai_key, weather_df, pollen_df, temperature=0.3, max_tokens=4096, top_p=0.9)
@@ -165,9 +163,9 @@ with dashb:
 
             # Insert charts between chapters at specific points
             if i == 0:
-                st.plotly_chart(fig2)
+                st.plotly_chart(fig2, use_container_width=True, key="dynamic_temp_humidity_chart")
             elif i == 1:
-                st.plotly_chart(fig1)
+                st.plotly_chart(fig1, use_container_width=True, key="dynamic_weed_pollen_chart")
 
             # Insert horizontally stacked current data metrics in a box
             if i == 2:
@@ -183,27 +181,22 @@ with dashb:
     with cstm:
         st.header("Custom Statistics")
 
-        user_input = st.chat_input(f"Ask about agriculture in {place}:")  # Updated prompt
+        user_input = st.chat_input(f"Ask about agriculture in {place}:")
 
         if user_input:
-            # Call the AI function with user input and location
             ai_response = get_agricultural_chat(Ai_key, user_input, place, weather_df, pollen_df, temperature=0.3, max_tokens=4096, top_p=0.9)
             custom_report = ai_response.split('---')
-            for chapter in custom_report:
+            for j, chapter in enumerate(custom_report):
                 st.markdown(chapter)
-                # Display the first chart (fig1) after the first chapter
-                if chapter == custom_report[0]:
-                    st.plotly_chart(fig1)
-                # Display the second chart (fig2) after the second chapter
-                elif chapter == custom_report[1]:
-                    st.plotly_chart(fig2)
+                if j == 0:
+                    st.plotly_chart(fig1, use_container_width=True, key="custom_weed_pollen_chart")
+                elif j == 1:
+                    st.plotly_chart(fig2, use_container_width=True, key="custom_temp_humidity_chart")
 
 # About Us tab
 with about:
-    # Title of the page
     st.title("About Us")
 
-    # Project Overview
     st.header("Project Overview")
     st.write(
         """
@@ -211,7 +204,6 @@ with about:
         """
     )
 
-    # Team Members Section
     st.header("Meet Our Team")
     team_members = {
         "Mohammed Aldaqaq": "Team Leader & Data Analyst",
@@ -220,12 +212,10 @@ with about:
         "Abdulla Hilal": "Web Developer"
     }
 
-    # Display team members in a collapsible section
     with st.expander("Click to view team members"):
         for name, role in team_members.items():
             st.write(f"**{name}**: {role}")
 
-    # Educational Background
     st.header("Our Background")
     st.write(
         """
@@ -233,7 +223,6 @@ with about:
         """
     )
 
-    # App Features Section
     st.header("App Features")
     st.write(
         """
@@ -241,7 +230,6 @@ with about:
         """
     )
 
-    # Interactive Feature: Feedback Section
     st.header("We Value Your Feedback!")
     feedback = st.text_area("What do you think about Farmers Aid?", placeholder="Share your thoughts...")
     if st.button("Submit Feedback"):
@@ -253,7 +241,6 @@ with about:
 # FAQ tab
 with faq:
     st.title("Frequently Asked Questions")
-    # Define FAQs as a dictionary
     faqs = {
         "What is Farmers Aid?":
             "Farmers Aid is a project dedicated to helping farmers make data-driven decisions through real-time data analytics collected from NASA and public APIs. It aims to empower farmers with insights to optimize their practices and improve yields.",
@@ -275,7 +262,6 @@ with faq:
             "The team members are students from the Nasser Vocational Training Centre (NVTC), where they are developing their skills in technology and data science."
     }
 
-    # Create an expandable section for each FAQ
     for question, answer in faqs.items():
         with st.expander(question):
             st.write(answer)
