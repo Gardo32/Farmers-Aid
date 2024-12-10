@@ -49,7 +49,7 @@ latitude = 26.169422
 longitude = 50.552246
 
 # Create a variable with the format City,Country
-place = f"Isatown,{country}"
+place = f"Jaww,{country}"
 
 # Fetch data
 pollen_df = get_combined_pollen_data(place)
